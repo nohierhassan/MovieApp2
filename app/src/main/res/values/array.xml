@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+
+    // assume the first array the values displayed to the user
+    // and the second one is the actual values passed and checked for
+
+    <string-array name="sortingOptions_entries">
+        <item>Most Popular</item>
+        <item>Top Rated</item>
+    </string-array>
+
+  // these are the actual value passed
+    <string-array name ="sortingOptions_entryValue">
+        <item>popularity.desc</item>
+        <item>vote_average.desc</item>
+    </string-array>
+
+</resources>

@@ -1,8 +1,10 @@
 package movieapp.nohier.com.movieapp2;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.GridView;
 
@@ -30,7 +32,9 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
     private Context context;
     private String BASE_URL= "https://api.themoviedb.org/3/discover/movie?";
     private String SORTING = "sort_by";
-    private String SORTING_VALUE ="popularity.desc";
+     String SORTING_VALUE =null;
+    private String SORTING_VALUE_TOPRATED= "vote_average.desc";
+
     private String API_KEY = "api_key";
     private String APPID = "019be2a57857d388c65d464c870471b7";
     // define the first element to parse from
@@ -46,6 +50,23 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
     @Override
     protected ArrayList<Image> doInBackground(Void... params)
     {
+
+        // check for the preferences before build the url every time
+    SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        String s = sharedPrefs.getString(String.valueOf(R.string.sortingOrder_key),String.valueOf(R.string.sortingOrder_key));
+        Log.v("Sorting----------BEFORE",s.toString());
+
+        if(s.equals("vote_average.desc")){
+             SORTING_VALUE= "vote_average.desc";
+            Log.v("Sorting-----------AFTER",SORTING_VALUE);
+
+        }
+        else{            SORTING_VALUE="popularity.desc";
+        }
+
+      Log.v("Sorting-----------AFTER",SORTING_VALUE);
+
         HttpURLConnection urlConnection = null;
         BufferedReader bufferedReader = null;
         String finalresult;
