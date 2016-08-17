@@ -3,18 +3,15 @@
 
 
 
-    // assume the first array the values displayed to the user
-    // and the second one is the actual values passed and checked for
-
-    <string-array name="sortingOptions_entries">
+    <string-array name="sortingOrder_entries">
         <item>Most Popular</item>
         <item>Top Rated</item>
     </string-array>
 
-  // these are the actual value passed
-    <string-array name ="sortingOptions_entryValue">
-        <item>popularity.desc</item>
-        <item>vote_average.desc</item>
+
+    <string-array name ="sortingOrder_entryValues">
+        <item>@string/sortingOrderPop</item>
+        <item>@string/sortingOrderRate</item>
     </string-array>
 
 </resources>

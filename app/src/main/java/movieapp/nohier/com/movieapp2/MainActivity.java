@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(new Intent(this, movieapp.nohier.com.movieapp2.SettingsActivity.class)); // start the setttin activity if the setting is selected
+            startActivity(new Intent(this,SettingsActivity.class)); // start the setttin activity if the setting is selected
             return true;
         }
 

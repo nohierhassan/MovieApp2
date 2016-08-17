@@ -1,6 +1,8 @@
 package movieapp.nohier.com.movieapp2;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -40,8 +42,13 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onStart() {
         // here we want to check for the check for the unites selected by the user
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        FetchData fetch = new FetchData(getContext(),gv);
+
+        String s = sharedPrefs.getString(getString(R.string.sortingOrderKey), getString(R.string.sortingOrderDefualtValue));
+       Log.v("*****************",s);
+
+        FetchData fetch = new FetchData(getContext(),gv,s);
         fetch.execute();
         Log.v("****************","ONSTART");
         super.onStart();

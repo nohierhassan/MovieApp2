@@ -2,13 +2,13 @@
     <string name="app_name">MovieApp2</string>
     <string name="action_settings">Settings</string>
 
-   <string name = "sortingOrder_title">Order By</string>
-    <string name = "sortingOrder_key">sortingOrder</string>
-   <string name = "sortingOrder_topRated">vote_average.desc</string>
-    <string name = "sortingOrder_pop">popularity.desc</string>
 
-
-
+    <!-- Strings for Sorting order -->
+    <string name = "sortingOrderTitle">View By NEW</string>
+    <string name = "sortingOrderKey">sorting order</string>
+    <string name = "sortingOrderDefualtValue">popularity.desc</string>
+    <string name = "sortingOrderPop">popularity.desc</string>
+    <string name = "sortingOrderRate">vote_average.desc</string>
 
 
 </resources>
