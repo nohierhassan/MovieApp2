@@ -169,7 +169,11 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
                 String imagePath = oneMovie.getString("poster_path");
                 String title  = oneMovie.getString("original_title");
                 Log.v("#######################", imagePath+"   ****   "+title);
-                images = new Image(title,imagePath);
+                String overview = oneMovie.getString("overview");
+
+                double vote = oneMovie.getDouble("vote_average");
+
+                images = new Image(title,imagePath,overview,vote);
                 finalArrayList.add(images);
 
             }

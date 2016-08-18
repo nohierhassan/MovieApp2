@@ -4,11 +4,11 @@
 
 
     <!-- Strings for Sorting order -->
-    <string name = "sortingOrderTitle">View By NEW</string>
-    <string name = "sortingOrderKey">sorting order</string>
-    <string name = "sortingOrderDefualtValue">popularity.desc</string>
-    <string name = "sortingOrderPop">popularity.desc</string>
-    <string name = "sortingOrderRate">vote_average.desc</string>
+    <string name="sortingOrderTitle">View By NEW</string>
+    <string name="sortingOrderKey">sorting order</string>
+    <string name="sortingOrderDefualtValue">popularity.desc</string>
+    <string name="sortingOrderPop">popularity.desc</string>
+    <string name="sortingOrderRate">vote_average.desc</string>
 
 
 </resources>
