@@ -66,26 +66,25 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
                     .appendQueryParameter(API_KEY, APPID).build();
 
 
-            Log.v("#$#$#$#$#$#$#$#$#$", "Built URI " + builturl.toString());
+
             // declaring the url
             URL url = new URL(builturl.toString());
             urlConnection = (HttpURLConnection)url.openConnection();
             urlConnection .setRequestMethod("GET");
-            Log.v("#$#$#$#$#$#$#$#$#$", "BEFORE CONNECTION " );
+
             urlConnection .connect();
 
-            Log.v("#$#$#$#$#$#$#$#$#$", "AFTER CONNECTION " );
 
 
             // getting the data
 
             InputStream inputstream = urlConnection .getInputStream();
-            Log.v("#$#$#$#$#$#$#$#$#$", "AFTER GETINPUTSTREAM " );
+
             StringBuffer stringbuffer = new StringBuffer();
             if(inputstream == null)
             // here we return null in order to goto the catch block
             {
-                Log.v("#$#$#$#$#$#$#$#$#$", "INPUTSTREAM ");
+
                 return null;
 
             }
@@ -101,7 +100,7 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
             // which means error alos
             if(stringbuffer.length()==0)
             {
-                Log.v("#$#$#$#$#$#$#$#$#$", "STRING BUFFER ");
+
                 return null; // return null if the buffer was empty;
             }
             finalresult = stringbuffer.toString();
@@ -109,6 +108,8 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
 
         } catch (IOException e) {
             Log.e("Fragment","Error",e);
+            e.printStackTrace();
+
             return null;
         }
 
@@ -161,19 +162,17 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
 
             // 2- crate the a JsonArray object to be able to access the jason elements
             JSONArray jsonArray = jsonObject.getJSONArray(rootelement);
-            Log.v("@#@#@#@#@#@3", String.valueOf(jsonArray.length()));
+
             Image images = null;
 
             for(int i =0;i<jsonArray.length();i++) {
                 JSONObject oneMovie = jsonArray.getJSONObject(i);
                 String imagePath = oneMovie.getString("poster_path");
                 String title  = oneMovie.getString("original_title");
-                Log.v("#######################", imagePath+"   ****   "+title);
                 String overview = oneMovie.getString("overview");
-
                 double vote = oneMovie.getDouble("vote_average");
-
-                images = new Image(title,imagePath,overview,vote);
+                String year = (String) oneMovie.get("release_date");
+                images = new Image(title,imagePath,overview,vote,year);
                 finalArrayList.add(images);
 
             }
@@ -181,7 +180,7 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
 
 
         } catch (JSONException e) {
-            Log.v("#######################","############################");
+
             e.printStackTrace();
         }
 
@@ -192,7 +191,6 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
     protected void onPostExecute(ArrayList<Image> images) {
       myAdapter adapter = new myAdapter(context,images);
        gridView.setAdapter(adapter);
-
 
 
 
