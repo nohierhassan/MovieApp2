@@ -1,10 +1,10 @@
 package movieapp.nohier.com.movieapp2;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.GridView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,53 +16,39 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
 /**
- * Created by mohamed k on 13/08/2016.
+ * Created by mohamed k on 29/08/2016.
  */
-public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
+// this class to play the trailer
+    // after generating the movie key from the movie id we got;
 
-    /*
-    Before defining the values you should define th parts of the url itself
-     */
-    private String   SORTING_VALUE = null;
-    GridView gridView;
-    private Context context;
-    private String BASE_URL= "https://api.themoviedb.org/3/discover/movie?";
-    private String SORTING = "sort_by";
-    private String API_KEY = "api_key";
-    private String APPID = "019be2a57857d388c65d464c870471b7";
-    // define the first element to parse from
+public class youtubeConnection extends AsyncTask <Void,Void,String>{
+    private String id;
+    private  static String key;
+    private String URL_BASE1 = "https://api.themoviedb.org/3/movie/";
+    private String URL_BASE2 = "/videos?";
+    private String API = "api_key";
+    private String API_KEY = "019be2a57857d388c65d464c870471b7";
     private String rootelement = "results";
-    // this is the constructor
+Context context;
 
-    @Override
-    protected void onPreExecute() {
-
-    }
-
-    public FetchData (Context context, GridView gridView,String SORTING_VALUE)
-    {
+    public youtubeConnection(String id,Context context){
+        this.id = id;
+        URL_BASE1+=id+URL_BASE2;
         this.context = context;
-        this.gridView = gridView;
-        this.SORTING_VALUE =SORTING_VALUE;
-
-
+        Log.v("************",URL_BASE1);
     }
 
     @Override
-    protected ArrayList<Image> doInBackground(Void... params)
-    {
-
-        // check for the preferences before build the url every time
+    protected String doInBackground(Void... params) {
         HttpURLConnection urlConnection = null;
         BufferedReader bufferedReader = null;
         String finalresult;
         try {
-            Uri builturl = Uri.parse(BASE_URL).buildUpon()
-                    .appendQueryParameter(SORTING, SORTING_VALUE)
-                    .appendQueryParameter(API_KEY, APPID).build();
+            Uri builturl = Uri.parse(URL_BASE1).buildUpon()
+                    .appendQueryParameter(API,API_KEY).build();
+            Log.v("************", String.valueOf(builturl));
 
 
 
@@ -70,7 +56,6 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
             URL url = new URL(builturl.toString());
             urlConnection = (HttpURLConnection)url.openConnection();
             urlConnection .setRequestMethod("GET");
-
             urlConnection .connect();
 
 
@@ -148,54 +133,34 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
         // this will return the ArrayList<Images>
 
     }
-    public ArrayList<Image> jsonParsing(String result){
-        ArrayList<Image> finalArrayList = new ArrayList<>(); // this is the array to be passed
-
-        // first get the movie posters and the title from the String result passed
-
-        // 1- craate the json object giving the costructor the passed String.
+    public String jsonParsing(String result){
 
         try {
             JSONObject jsonObject = new JSONObject(result);
 
-
-            // 2- crate the a JsonArray object to be able to access the jason elements
             JSONArray jsonArray = jsonObject.getJSONArray(rootelement);
 
-            Image images = null;
-
-            for(int i =0;i<jsonArray.length();i++) {
-                JSONObject oneMovie = jsonArray.getJSONObject(i);
-                String imagePath = oneMovie.getString("poster_path");
-                String title  = oneMovie.getString("original_title");
-                String overview = oneMovie.getString("overview");
-                double vote = oneMovie.getDouble("vote_average");
-                String year = (String) oneMovie.get("release_date");
-                String id = oneMovie.getString("id");
-                Log.v("XXXXXXXXXX",id);
-                images = new Image(title,imagePath,overview,vote,year,id);
-                finalArrayList.add(images);
-
-            }
-
-
+                JSONObject oneObject = jsonArray.getJSONObject(0);
+            key = oneObject.getString("key");
 
         } catch (JSONException e) {
 
             e.printStackTrace();
         }
 
-        return finalArrayList; // here should be the ArrayList<Images>
+        return key;
     }
 
-    @Override  // doPostExecute should make the adapter and update the UI
-    protected void onPostExecute(ArrayList<Image> images) {
-      myAdapter adapter = new myAdapter(context,images);
-       gridView.setAdapter(adapter);
+    @Override
+    protected void onPostExecute(String key) {
+        // key is the key of the film
+
+            Intent intent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://www.youtube.com/watch?v=" + key));
+        Log.v("***&*&*&*&*&&&***","http://www.youtube.com/watch?v=" + key);
+           context.startActivity(intent);
 
 
-
-        super.onPostExecute(images);
+        super.onPostExecute(key);
     }
-
 }

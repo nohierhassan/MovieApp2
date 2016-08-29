@@ -12,15 +12,27 @@ public class Image implements Parcelable {
     private String overview;
     private double vote;
     private String year;
+    private String id;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+
+
 
     public Image(Parcel in) {
-        String [] data = new String[5];
+        String [] data = new String[6];
         in.readStringArray(data);
         this.title = data[0];
         this.path = data[1];
         this.overview = data[2];
         this.vote = Double.parseDouble(data[3]);
         this.year = data[4];
+        this.id = data[5];
 
     }
 
@@ -69,12 +81,13 @@ public class Image implements Parcelable {
         this.path = path;
     }
 
-    public Image(String title, String path,String overview,double vote,String year) {
+    public Image(String title, String path,String overview,double vote,String year,String id) {
         this.title = title;
         this.path = path;
         this.overview = overview;
         this.vote=  vote;
         this.year = year;
+        this.id = id;
     }
 
     @Override
@@ -85,7 +98,7 @@ public class Image implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[]{
-         this.title,this.path,this.overview, String.valueOf(this.vote),this.year
+         this.title,this.path,this.overview, String.valueOf(this.vote),this.year,this.id
 
         });
 
