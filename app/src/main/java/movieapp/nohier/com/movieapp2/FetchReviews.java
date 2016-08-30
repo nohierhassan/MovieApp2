@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.GridView;
+import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,50 +19,35 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Created by mohamed k on 13/08/2016.
+ * Created by mohamed k on 30/08/2016.
  */
-public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
-
-    /*
-    Before defining the values you should define th parts of the url itself
-     */
-    private String   SORTING_VALUE = null;
-    GridView gridView;
-    private Context context;
-    private String BASE_URL= "https://api.themoviedb.org/3/discover/movie?";
-    private String SORTING = "sort_by";
-    private String API_KEY = "api_key";
-    private String APPID = "019be2a57857d388c65d464c870471b7";
-    // define the first element to parse from
+public class FetchReviews extends AsyncTask  <Void,Void,ArrayList<Review>>{
+    private String URL_BASE1 = "https://api.themoviedb.org/3/movie/";
+    private String URL_BASE2 = "/reviews?";
+    private String API = "api_key";
+    private String API_KEY = "019be2a57857d388c65d464c870471b7";
     private String rootelement = "results";
-    // this is the constructor
+    private String id;
+    private Context context;
+    private ListView ls;
 
-    @Override
-    protected void onPreExecute() {
-
-    }
-
-    public FetchData (Context context, GridView gridView,String SORTING_VALUE)
-    {
+    public FetchReviews(String id,Context context,ListView ls) {
+        this.id = id;
+        URL_BASE1+=id+URL_BASE2;
         this.context = context;
-        this.gridView = gridView;
-        this.SORTING_VALUE =SORTING_VALUE;
-
+        this.ls = ls;
 
     }
 
     @Override
-    protected ArrayList<Image> doInBackground(Void... params)
-    {
-
-        // check for the preferences before build the url every time
+    protected ArrayList<Review> doInBackground(Void... params) {
         HttpURLConnection urlConnection = null;
         BufferedReader bufferedReader = null;
         String finalresult;
         try {
-            Uri builturl = Uri.parse(BASE_URL).buildUpon()
-                    .appendQueryParameter(SORTING, SORTING_VALUE)
-                    .appendQueryParameter(API_KEY, APPID).build();
+            Uri builturl = Uri.parse(URL_BASE1).buildUpon()
+                    .appendQueryParameter(API,API_KEY).build();
+            Log.v("************", String.valueOf(builturl));
 
 
 
@@ -70,7 +55,6 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
             URL url = new URL(builturl.toString());
             urlConnection = (HttpURLConnection)url.openConnection();
             urlConnection .setRequestMethod("GET");
-
             urlConnection .connect();
 
 
@@ -115,18 +99,6 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
         // after making the try and catch block you have to make the finally block
 
 
-        /*
-        try to make another connection to get the overview of the movie
-         */
-
-
-
-
-
-
-
-
-
         finally {
             // usually the finally block includes the resource closing
 
@@ -156,12 +128,12 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
 
         }
 
-        return jsonParsing(finalresult);   // this is the actuall parsing (getting the results)
-        // this will return the ArrayList<Images>
+        return jsonParsing(finalresult);
+
 
     }
-    public ArrayList<Image> jsonParsing(String result){
-        ArrayList<Image> finalArrayList = new ArrayList<>(); // this is the array to be passed
+    public ArrayList<Review> jsonParsing(String result){
+        ArrayList<Review> finalArrayList = new ArrayList<>(); // this is the array to be passed
 
         // first get the movie posters and the title from the String result passed
 
@@ -174,19 +146,16 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
             // 2- crate the a JsonArray object to be able to access the jason elements
             JSONArray jsonArray = jsonObject.getJSONArray(rootelement);
 
-            Image images = null;
+            Review review = null;
+            String author;
+            String reviewText;
 
             for(int i =0;i<jsonArray.length();i++) {
                 JSONObject oneMovie = jsonArray.getJSONObject(i);
-                String imagePath = oneMovie.getString("poster_path");
-                String title  = oneMovie.getString("original_title");
-                String overview = oneMovie.getString("overview");
-                double vote = oneMovie.getDouble("vote_average");
-                String year = (String) oneMovie.get("release_date");
-                String id = oneMovie.getString("id");
-                Log.v("XXXXXXXXXX",id);
-                images = new Image(title,imagePath,overview,vote,year,id);
-                finalArrayList.add(images);
+                author = oneMovie.getString("author");
+                reviewText = oneMovie.getString("content");
+                review = new Review(author,reviewText);
+                finalArrayList.add(review);
 
             }
 
@@ -200,14 +169,12 @@ public class FetchData extends AsyncTask<Void,Void,ArrayList<Image>> {
         return finalArrayList; // here should be the ArrayList<Images>
     }
 
-    @Override  // doPostExecute should make the adapter and update the UI
-    protected void onPostExecute(ArrayList<Image> images) {
-      myAdapter adapter = new myAdapter(context,images);
-       gridView.setAdapter(adapter);
 
+    @Override
+    protected void onPostExecute(ArrayList<Review> reviews) {
+        ReviewAdapter adapter = new ReviewAdapter(reviews,context);
+        ls.setAdapter(adapter);
 
-
-        super.onPostExecute(images);
+        super.onPostExecute(reviews);
     }
-
 }
