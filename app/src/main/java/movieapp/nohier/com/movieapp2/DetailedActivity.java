@@ -18,43 +18,66 @@ public class DetailedActivity extends AppCompatActivity
          {
              ListView ls;
              Context c = this;
-             static String id;
+             private String id;
+             private String title;
+             private String path;
+             private String overview;
+             private double vote;
+             private String year;
+             OpenHelper openHelper = new OpenHelper(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailed);
         ls = (ListView) findViewById(R.id.listView);
-
-
+        final OpenHelper openHelper  = new OpenHelper(c);
         if(getIntent().hasExtra("Image")) {
-          final Image image = getIntent().getParcelableExtra("Image");
-          TextView moviename = (TextView) findViewById(R.id.movie_name);
+            final Image image = getIntent().getParcelableExtra("Image");
+            TextView moviename = (TextView) findViewById(R.id.movie_name);
             id = image.getId();
-          ImageView imageView = (ImageView) findViewById(R.id.imageView);
-          TextView year = (TextView) findViewById(R.id.year);
-          TextView vote = (TextView) findViewById(R.id.vote);
-          TextView overview = (TextView) findViewById(R.id.overview);
-          moviename.setText(image.getTitle());
-          Picasso.with(this).load("http://image.tmdb.org/t/p/w185/" + image.getPath()).into(imageView);
-          year.setText(image.getYear());
-          String votee = String.valueOf(image.getVote());
-          vote.setText(votee);
-          overview.setText(image.getOverview());
-          Button btn = (Button) findViewById(R.id.button);
-          btn.setOnClickListener(new View.OnClickListener() {
-              public void onClick(View v) {
-                  youtubeConnection youtubeConnection1 = new youtubeConnection(image.getId(), c);
-                  youtubeConnection1.execute();
+            title = image.getTitle();
+            path = image.getPath();
+            overview = image.getOverview();
+            vote = image.getVote();
+            year = image.getYear();
+
+            ImageView imageView = (ImageView) findViewById(R.id.imageView);
+            TextView year = (TextView) findViewById(R.id.year);
+            TextView vote = (TextView) findViewById(R.id.vote);
+            TextView overview = (TextView) findViewById(R.id.overview);
+            moviename.setText(image.getTitle());
+            Picasso.with(this).load("http://image.tmdb.org/t/p/w185/" + image.getPath()).into(imageView);
+            year.setText(image.getYear());
+            String votee = String.valueOf(image.getVote());
+            vote.setText(votee);
+            overview.setText(image.getOverview());
+            Button btn = (Button) findViewById(R.id.button);
+            btn.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    youtubeConnection youtubeConnection1 = new youtubeConnection(image.getId(), c);
+                    youtubeConnection1.execute();
 
 
-              }
-          });
+                }
+            });
 
 
-      }
+        }
+
+
+
+
+
+
 
     }
+             public void fabclick(View v)
+             {
+                 openHelper.insertData(id,title,path,overview, String.valueOf(vote),year);
+
+             }
 
              @Override
              protected void onStart() {

@@ -9,6 +9,8 @@
     <string name="sortingOrderDefualtValue">popularity.desc</string>
     <string name="sortingOrderPop">popularity.desc</string>
     <string name="sortingOrderRate">vote_average.desc</string>
+    <string name="sortingOrderFav">Fav</string>
+
 
 
 </resources>
